@@ -9,8 +9,8 @@ class NoiseCircluarWalker {
   String name; 
   int index; 
   NoiseCircluarWalker (int _id, String _name, int _index) {
-    aoff = random(1000);
-    roff = random(1000);
+    aoff = random(10000);
+    roff = random(10000);
     id = _id;
     name = _name;
     index = _index;
