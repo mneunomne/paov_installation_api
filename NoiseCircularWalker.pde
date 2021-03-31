@@ -4,11 +4,11 @@ class NoiseCircluarWalker {
   float roff;
   float aVel = .001;
   float rVel = .001;
-  int id; 
+  long id; 
   float posX, posY;
   String name; 
   int index; 
-  NoiseCircluarWalker (int _id, String _name, int _index) {
+  NoiseCircluarWalker (long _id, String _name, int _index) {
     aoff = random(10000);
     roff = random(10000);
     id = _id;
@@ -44,12 +44,17 @@ class NoiseCircluarWalker {
   }
   
   void sendOSC (float theta, float radius) {
-    OscMessage myOscMessage = new OscMessage("/pos");
-    myOscMessage.add(index);
-    myOscMessage.add(theta);
-    myOscMessage.add(radius / height);
-    // myOscMessage.add(posX / height);
-    // myOscMessage.add(posY / height);
-    oscP5.send(myOscMessage, myBroadcastLocation);
+    OscMessage visMessage = new OscMessage("/pos");
+    visMessage.add(index);
+    visMessage.add(theta);
+    visMessage.add(radius / height);
+    oscP5.send(visMessage, localBroadcast);
+    
+    
+    OscMessage audioMessage = new OscMessage("/pos");
+    audioMessage.add(Long.toString(id));
+    audioMessage.add((theta / (PI * 2) * 360) % 360);
+    audioMessage.add(radius / height);
+    oscP5.send(audioMessage, remoteBroadcast);
   }
 }

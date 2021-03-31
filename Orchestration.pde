@@ -62,18 +62,24 @@ class Orchestration {
   }
   
   void sendOscplay () {
-    OscMessage myOscMessage = new OscMessage("/play");
-    myOscMessage.add(currentSpeakerId);
-    myOscMessage.add(curAudioId);
-    myOscMessage.add(curAudioText);
-    oscP5.send(myOscMessage, myBroadcastLocation);
+    OscMessage visMessage = new OscMessage("/play");
+    visMessage.add(currentSpeakerId);
+    visMessage.add(curAudioId);
+    visMessage.add(curAudioText);
+    oscP5.send(visMessage, localBroadcast);
+    
+    OscMessage audioMessage = new OscMessage("/play");
+    audioMessage.add(currentSpeakerId);
+    audioMessage.add(curAudioId);
+    audioMessage.add(curAudioText);
+    oscP5.send(audioMessage, remoteBroadcast);
   }
   
   void sendOscEnd () {
     OscMessage myOscMessage = new OscMessage("/end");
     myOscMessage.add(currentSpeakerId);
     myOscMessage.add(curAudioId);
-    oscP5.send(myOscMessage, myBroadcastLocation);
+    oscP5.send(myOscMessage, localBroadcast);
   }
   
   int getCurrentSpeakerId () {

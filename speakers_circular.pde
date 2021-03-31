@@ -6,11 +6,15 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 OscP5 oscP5;
-NetAddress myBroadcastLocation; 
+NetAddress remoteBroadcast; 
+
+NetAddress localBroadcast; 
 
 import controlP5.*;
 ControlP5 cp5;
 Range range;
+
+float realRadius = 3;
 
 float aoff = 0.0;
 float roff = 0.0;
@@ -55,7 +59,8 @@ void setup() {
 
 void connectOSC () {
   oscP5 = new OscP5(this,12000);
-  myBroadcastLocation = new NetAddress("127.0.0.1",32000);
+  localBroadcast = new NetAddress("127.0.0.1",32000);
+  remoteBroadcast = new NetAddress("192.168.0.133",32000);
 }
 
 JSONObject json;
@@ -69,7 +74,7 @@ void loadJSON() {
   for (int i = 0; i < speakers.size(); i++) {    
     JSONObject item = speakers.getJSONObject(i); 
     String name = item.getString("speaker");
-    int id = item.getInt("id");
+    long id = item.getLong("id");
     // println(name, id);
     NoiseCircluarWalker n = new NoiseCircluarWalker(id, name, i);
     walkers.add(n);
