@@ -47,6 +47,26 @@ void setup() {
              .setColorBackground(color(255,40))  
              ;
   
+  cp5.addSlider("angleVelocitySlider")
+     .setPosition(0,20)
+     .setSize(400,20)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))
+     .setValue(10)
+     .setRange(1, 500)
+     .setBroadcast(true)
+     ;
+     
+  cp5.addSlider("radiusVelocitySlider")
+     .setPosition(0,40)
+     .setSize(400,20)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     .setValue(10)
+     .setRange(1, 500)
+     .setBroadcast(true)
+     ;
+  
   // noiseSeed(1);
   stroke(255);
   
@@ -89,8 +109,8 @@ void draw() {
   
   // orchestration update
   orchestration1.update();
-  orchestration2.update();
-  orchestration3.update();
+  // orchestration2.update();
+  // orchestration3.update();
   
   for(int i = 0; i < numSpeakers; i++) {
     walkers.get(i).update();
@@ -103,5 +123,25 @@ void controlEvent(ControlEvent theControlEvent) {
   if(theControlEvent.isFrom("rangeController")) {
     minRadius = int(theControlEvent.getController().getArrayValue(0));
     maxRadius = int(theControlEvent.getController().getArrayValue(1));
+  }
+  
+  if(theControlEvent.isFrom("rangeController")) {
+    minRadius = int(theControlEvent.getController().getArrayValue(0));
+  }
+  
+  if(theControlEvent.isFrom("rangeController")) {
+    minRadius = int(theControlEvent.getController().getArrayValue(0));
+  }
+}
+
+void angleVelocitySlider(float vel) {
+  for(int i = 0; i < walkers.size(); i++) {
+    walkers.get(i).setAngleVelocity(vel);
+  }
+}
+
+void angleRadiusSlider(float vel) {
+  for(int i = 0; i < walkers.size(); i++) {
+    walkers.get(i).setRadiusVelocity(vel);
   }
 }

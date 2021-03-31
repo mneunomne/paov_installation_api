@@ -43,6 +43,14 @@ class NoiseCircluarWalker {
     sendOSC(theta, radius);
   }
   
+  void setAngleVelocity (float vel) {
+    aVel = vel / 10000;
+  }
+  
+  void setRadiusVelocity (float vel) {
+    rVel = vel / 10000;
+  }
+  
   void sendOSC (float theta, float radius) {
     OscMessage visMessage = new OscMessage("/pos");
     visMessage.add(index);
@@ -54,7 +62,7 @@ class NoiseCircluarWalker {
     OscMessage audioMessage = new OscMessage("/pos");
     audioMessage.add(Long.toString(id));
     audioMessage.add((theta / (PI * 2) * 360) % 360);
-    audioMessage.add(radius / height);
+    audioMessage.add(radius / (height/2));
     oscP5.send(audioMessage, remoteBroadcast);
   }
 }

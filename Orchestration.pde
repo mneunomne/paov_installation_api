@@ -1,7 +1,7 @@
 class Orchestration { 
 
   int lastTimeCheck = 0;
-  int timeIntervalFlag = 300; // 3 seconds because we are working with millis
+  int timeIntervalFlag = 3000; // 3 seconds because we are working with millis
 
   int interval;
   JSONArray audios;
@@ -10,7 +10,7 @@ class Orchestration {
 
   int curAudioDuration; 
   int curAudioId;
-  int currentSpeakerId;
+  long currentSpeakerId;
   String currentSpeakerName;
   String curAudioText;
   Orchestration (JSONArray _audios) {
@@ -46,7 +46,7 @@ class Orchestration {
     curAudioDuration = audio.getInt("duration_seconds") * 1000 + 500;
     lastTimeCheck = millis();
     isPlaying = true;
-    currentSpeakerId = audio.getInt("from_id");
+    currentSpeakerId = audio.getLong("from_id");
     curAudioId = audio.getInt("id");
     currentSpeakerName = audio.getString("from");
     curAudioText = audio.getString("text");
@@ -69,7 +69,7 @@ class Orchestration {
     oscP5.send(visMessage, localBroadcast);
     
     OscMessage audioMessage = new OscMessage("/play");
-    audioMessage.add(currentSpeakerId);
+    audioMessage.add(Long.toString(currentSpeakerId));
     audioMessage.add(curAudioId);
     audioMessage.add(curAudioText);
     oscP5.send(audioMessage, remoteBroadcast);
@@ -82,7 +82,7 @@ class Orchestration {
     oscP5.send(myOscMessage, localBroadcast);
   }
   
-  int getCurrentSpeakerId () {
+  long getCurrentSpeakerId () {
     return currentSpeakerId;
   }
 }
