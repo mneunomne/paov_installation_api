@@ -25,19 +25,14 @@ class NoiseCircluarWalker {
     posX = radius * cos( theta );
     posY = radius * sin( theta );
     pushMatrix();
-    
-    if (
-      orchestration1.getCurrentSpeakerId() == id ||
-      orchestration2.getCurrentSpeakerId() == id ||
-      orchestration3.getCurrentSpeakerId() == id
-    ) {
-      fill(255); 
-    } else {
-      noFill();
+    noFill();
+    for (long _id : orchestration.getCurrentSpeakerId()) {
+      if (_id == id) {
+        fill(255); 
+      }
     }
-
     
-    translate(width/2, height/2);
+    translate(height/2, height/2);
     ellipse(posX, posY, 4, 4);
     popMatrix();
     sendOSC(theta, radius);
@@ -55,13 +50,14 @@ class NoiseCircluarWalker {
     OscMessage visMessage = new OscMessage("/pos");
     visMessage.add(index);
     visMessage.add(theta);
+    // visMessage.add(0.001);
     visMessage.add(radius / height);
     oscP5.send(visMessage, localBroadcast);
     
     
     OscMessage audioMessage = new OscMessage("/pos");
     audioMessage.add(Long.toString(id));
-    audioMessage.add((theta / (PI * 2) * 360) % 360);
+    audioMessage.add((theta / (PI * 2) * 360 - 90) % 360 );
     audioMessage.add(radius / (height/2));
     oscP5.send(audioMessage, remoteBroadcast);
   }

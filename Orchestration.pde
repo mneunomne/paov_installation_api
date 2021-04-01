@@ -1,88 +1,70 @@
-class Orchestration { 
-
-  int lastTimeCheck = 0;
-  int timeIntervalFlag = 3000; // 3 seconds because we are working with millis
-
-  int interval;
+public class Orchestration { 
   JSONArray audios;
-
-  boolean isPlaying = false;
-
-  int curAudioDuration; 
-  int curAudioId;
-  long currentSpeakerId;
-  String currentSpeakerName;
-  String curAudioText;
+  Voice[] voices = new Voice[maxNumVoices];
+  
   Orchestration (JSONArray _audios) {
     audios = _audios;
-  }
-
-  void update () {
-    if (!isPlaying) {
-      if (millis() > lastTimeCheck + timeIntervalFlag ) {
-        // here pick on audio 
-        JSONObject audio = getNextAudio();
-        play(audio);
-      }      
-    } else {
-      // check if audio has finnished playing
-      if (millis() > lastTimeCheck + curAudioDuration) {
-        end();
-      }
-      // debug
-      fill(255);
-      text("curAudio: " + curAudioId, 0, height-20);
-      text("curText: " + curAudioText, 0, height-40);
-    }
     
+    // initiate all voices
+    for (int i = 0; i < maxNumVoices; i++) {
+     voices[i] = new Voice(i, i < numActiveVoices,0); 
+    }
+  }
+  
+  void setActiveVoices (int amount) {
+    numActiveVoices = amount;
+  }
+  
+  void update () {
+    for(int i = 0; i < numActiveVoices; i++) {
+       voices[i].update();
+    }
   }
 
   JSONObject getNextAudio () {
-    int index = floor(random(0, audios.size()));
-    return audios.getJSONObject(index);
-  }
-
-  void play (JSONObject audio) {
-    curAudioDuration = audio.getInt("duration_seconds") * 1000 + 500;
-    lastTimeCheck = millis();
-    isPlaying = true;
-    currentSpeakerId = audio.getLong("from_id");
-    curAudioId = audio.getInt("id");
-    currentSpeakerName = audio.getString("from");
-    curAudioText = audio.getString("text");
-    sendOscplay();
-  }
-
-  void end () {
-    curAudioDuration = 0;
-    lastTimeCheck = millis();
-    isPlaying = false;
-    sendOscEnd();
-    currentSpeakerId = 0;
+    ArrayList<JSONObject> filtered = new ArrayList<JSONObject>();
+    for (int i = 0; i < audios.size(); i++) {
+      JSONObject obj = audios.getJSONObject(i);
+      long cur_id = obj.getLong("from_id");
+      boolean hasFound = false; 
+      for (long id : getCurrentSpeakerId()) {
+         if (cur_id == id) {
+            hasFound = true;
+         }
+      }
+      if (!hasFound) {
+         filtered.add(obj);
+      }
+    }
+    int index = floor(random(0, filtered.size())); 
+    return filtered.get(index);
   }
   
-  void sendOscplay () {
+  void sendOscplay (long speakerId, int audioID, String audioText) {
     OscMessage visMessage = new OscMessage("/play");
-    visMessage.add(currentSpeakerId);
-    visMessage.add(curAudioId);
-    visMessage.add(curAudioText);
+    visMessage.add(Long.toString(speakerId));
+    visMessage.add(audioID);
+    visMessage.add(audioText);
     oscP5.send(visMessage, localBroadcast);
     
     OscMessage audioMessage = new OscMessage("/play");
-    audioMessage.add(Long.toString(currentSpeakerId));
-    audioMessage.add(curAudioId);
-    audioMessage.add(curAudioText);
+    audioMessage.add(Long.toString(speakerId));
+    audioMessage.add(audioID);
     oscP5.send(audioMessage, remoteBroadcast);
   }
   
-  void sendOscEnd () {
+  void sendOscEnd (long speakerId, int audioID) {
     OscMessage myOscMessage = new OscMessage("/end");
-    myOscMessage.add(currentSpeakerId);
-    myOscMessage.add(curAudioId);
+    myOscMessage.add(Long.toString(speakerId));
+    myOscMessage.add(audioID);
     oscP5.send(myOscMessage, localBroadcast);
   }
   
-  long getCurrentSpeakerId () {
-    return currentSpeakerId;
+  long [] getCurrentSpeakerId () {
+    long [] ids = new long[numActiveVoices];
+    for(int i = 0; i < numActiveVoices; i++) {
+       ids[i] = voices[i].getSpeakerId();
+    }
+    return ids;
   }
 }

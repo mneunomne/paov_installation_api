@@ -16,6 +16,9 @@ Range range;
 
 float realRadius = 3;
 
+int maxNumVoices = 5;
+int numActiveVoices = 1;
+
 float aoff = 0.0;
 float roff = 0.0;
 NoiseCircluarWalker n;
@@ -26,21 +29,22 @@ ArrayList<NoiseCircluarWalker> walkers = new ArrayList<NoiseCircluarWalker>();
 float minRadius;
 float maxRadius;
 
-Orchestration orchestration1;
-Orchestration orchestration2;
-Orchestration orchestration3;
+Orchestration orchestration;
+
+float blurAmount = 65;
+
+ArrayList<String> availableVoices = new ArrayList<String>();
 
 void setup() {
-  size(400, 400);
+  size(800, 400);
   minRadius = 100;
-  maxRadius = width/2;
+  maxRadius = height/2;
   cp5 = new ControlP5(this);
   range = cp5.addRange("rangeController")
-             .setBroadcast(false) 
-             .setPosition(0,0)
-             .setSize(400,20)
+             .setPosition(420,0)
+             .setSize(200,15)
              .setHandleSize(10)
-             .setRange(0,width)
+             .setRange(0,height)
              .setRangeValues(minRadius, maxRadius)
              .setBroadcast(true)
              .setColorForeground(color(255,40))
@@ -48,8 +52,8 @@ void setup() {
              ;
   
   cp5.addSlider("angleVelocitySlider")
-     .setPosition(0,20)
-     .setSize(400,20)
+     .setPosition(420,20)
+     .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
      .setValue(10)
@@ -58,12 +62,23 @@ void setup() {
      ;
      
   cp5.addSlider("radiusVelocitySlider")
-     .setPosition(0,40)
-     .setSize(400,20)
+     .setPosition(420,40)
+     .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
      .setValue(10)
      .setRange(1, 500)
+     .setBroadcast(true)
+     ;
+     
+  cp5.addSlider("numSpeakers")
+     .setPosition(420,60)
+     .setSize(200,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     .setNumberOfTickMarks(maxNumVoices)
+     .setRange(0, maxNumVoices)
+     .setValue(numActiveVoices)
      .setBroadcast(true)
      ;
   
@@ -87,9 +102,7 @@ JSONObject json;
 void loadJSON() {
   json = loadJSONObject("data.json");
   JSONArray audios = json.getJSONArray("audios");
-  orchestration1 = new Orchestration(audios);
-  orchestration2 = new Orchestration(audios);
-  orchestration3 = new Orchestration(audios);
+  orchestration = new Orchestration(audios);
   JSONArray speakers = json.getJSONArray("speakers");
   for (int i = 0; i < speakers.size(); i++) {    
     JSONObject item = speakers.getJSONObject(i); 
@@ -105,12 +118,10 @@ void draw() {
   background(0);
   noFill();
   stroke(255);
-  ellipse(width/2, height/2, height/2,height/2);
+  ellipse(height/2, height/2, height/2,height/2);
   
   // orchestration update
-  orchestration1.update();
-  // orchestration2.update();
-  // orchestration3.update();
+  orchestration.update();
   
   for(int i = 0; i < numSpeakers; i++) {
     walkers.get(i).update();
@@ -118,6 +129,7 @@ void draw() {
   fill(255);
   text("fps: " + frameRate, 0, height - 5);
 }
+
 
 void controlEvent(ControlEvent theControlEvent) {
   if(theControlEvent.isFrom("rangeController")) {
@@ -134,14 +146,19 @@ void controlEvent(ControlEvent theControlEvent) {
   }
 }
 
+
 void angleVelocitySlider(float vel) {
   for(int i = 0; i < walkers.size(); i++) {
     walkers.get(i).setAngleVelocity(vel);
   }
 }
 
-void angleRadiusSlider(float vel) {
+void radiusVelocitySlider(float vel) {
   for(int i = 0; i < walkers.size(); i++) {
     walkers.get(i).setRadiusVelocity(vel);
   }
+}
+
+void numSpeakers (int val) {
+  orchestration.setActiveVoices(val);
 }
