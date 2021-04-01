@@ -16,7 +16,7 @@ public class Orchestration {
   }
   
   void update () {
-    for(int i = 0; i < numActiveVoices; i++) {
+    for(int i = 0; i < maxNumVoices; i++) {
        voices[i].update();
     }
   }

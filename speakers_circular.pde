@@ -35,6 +35,9 @@ Orchestration orchestration;
 
 float blurAmount = 65;
 
+int voicesControlHeight = 200;
+int cp5_h = 20;
+
 ArrayList<String> availableVoices = new ArrayList<String>();
 
 void setup() {
@@ -42,10 +45,10 @@ void setup() {
   minRadius = 100;
   maxRadius = height/2;
   cp5 = new ControlP5(this);
-
+  int cp5_y = 0;
   // radius range
   cp5.addRange("rangeController")
-     .setPosition(420,0)
+     .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setHandleSize(10)
      .setRange(0,height)
@@ -54,10 +57,10 @@ void setup() {
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
      ;
-
+  cp5_y+=25;
   // angle velocity slider
   cp5.addSlider("angleVelocitySlider")
-     .setPosition(420,20)
+     .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
@@ -65,21 +68,21 @@ void setup() {
      .setRange(1, 500)
      .setBroadcast(true)
      ;
-  
+  cp5_y+=25;
   // radius velocity slider
   cp5.addSlider("radiusVelocitySlider")
-     .setPosition(420,40)
+     .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
-     .setValue(10)
+     .setValue(10)  
      .setRange(1, 500)
      .setBroadcast(true)
      ;
-  
+  cp5_y+=25;
   // number of simoutanous speakers
   cp5.addSlider("numSpeakers")
-     .setPosition(420,60)
+     .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
@@ -88,11 +91,22 @@ void setup() {
      .setValue(numActiveVoices)
      .setBroadcast(true)
      ;
-
+  cp5_y+=25;
+  // reverb amount
+  cp5.addSlider("reverbAmount")
+     .setPosition(420,cp5_h + cp5_y)
+     .setSize(200,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     .setRange(0, 1)
+     .setValue(0.5)
+     .setBroadcast(true)
+     ;
+  
   // individual interval for each voice
   for (int i = 0; i < maxNumVoices; i++) {
     cp5.addSlider("Voice_" + i)
-     .setPosition(420,105 + 35 * i)
+     .setPosition(420,(voicesControlHeight + 5) + 35 * i)
      .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
@@ -186,4 +200,10 @@ void radiusVelocitySlider(float vel) {
 
 void numSpeakers (int val) {
   orchestration.setActiveVoices(val);
+}
+
+void reverbAmount (float val) {
+  OscMessage audioMessage = new OscMessage("/reverb");
+  audioMessage.add(val);
+  oscP5.send(audioMessage, remoteBroadcast);
 }

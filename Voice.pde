@@ -29,17 +29,23 @@ public class Voice {
   }
  
  void end () {
-    curAudioDuration = 0;
-    lastTimeCheck = millis();
-    isPlaying = false;
     orchestration.sendOscEnd(currentSpeakerId, curAudioId);
+    reset();
+  }
+  
+  void reset () {
+    curAudioDuration = 0;
+    isPlaying = false;
     curAudioId = 0;
     currentSpeakerId = 0;
     currentSpeakerName = "";
   }
   
   void setActive(boolean val) {
-    isActive = val; 
+    isActive = val;
+    if (val == false) {
+      reset();
+    }
   }
   
   void setInterval (int val) {
@@ -47,6 +53,7 @@ public class Voice {
   }
  
  void update () {
+   if (isActive) {
     if (!isPlaying) {
       if (millis() > lastTimeCheck + interval ) {
         // here pick on audio 
@@ -59,11 +66,12 @@ public class Voice {
         end();
       }
     }
-    debug();
+   } 
+   debug();
   }
   
   void debug () {
-    text(index + ": " + currentSpeakerName, 420, 100 + 35 * index); 
+    text(index + ": " + currentSpeakerName + " "  + curAudioText, 420, voicesControlHeight + 35 * index); 
   }
   
   long getSpeakerId () {
