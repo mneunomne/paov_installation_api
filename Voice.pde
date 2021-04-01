@@ -63,7 +63,7 @@ public class Voice {
   }
   
   void debug () {
-    text(index + ": " + currentSpeakerName, 420, 200 + 20 * index); 
+    text(index + ": " + currentSpeakerName, 420, 100 + 35 * index); 
   }
   
   long getSpeakerId () {

@@ -23,6 +23,8 @@ float aoff = 0.0;
 float roff = 0.0;
 NoiseCircluarWalker n;
 
+int initialInterval = 3000;
+
 int numSpeakers = 25;
 ArrayList<NoiseCircluarWalker> walkers = new ArrayList<NoiseCircluarWalker>();
 
@@ -40,17 +42,20 @@ void setup() {
   minRadius = 100;
   maxRadius = height/2;
   cp5 = new ControlP5(this);
-  range = cp5.addRange("rangeController")
-             .setPosition(420,0)
-             .setSize(200,15)
-             .setHandleSize(10)
-             .setRange(0,height)
-             .setRangeValues(minRadius, maxRadius)
-             .setBroadcast(true)
-             .setColorForeground(color(255,40))
-             .setColorBackground(color(255,40))  
-             ;
-  
+
+  // radius range
+  cp5.addRange("rangeController")
+     .setPosition(420,0)
+     .setSize(200,15)
+     .setHandleSize(10)
+     .setRange(0,height)
+     .setRangeValues(minRadius, maxRadius)
+     .setBroadcast(true)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     ;
+
+  // angle velocity slider
   cp5.addSlider("angleVelocitySlider")
      .setPosition(420,20)
      .setSize(200,15)
@@ -60,7 +65,8 @@ void setup() {
      .setRange(1, 500)
      .setBroadcast(true)
      ;
-     
+  
+  // radius velocity slider
   cp5.addSlider("radiusVelocitySlider")
      .setPosition(420,40)
      .setSize(200,15)
@@ -70,7 +76,8 @@ void setup() {
      .setRange(1, 500)
      .setBroadcast(true)
      ;
-     
+  
+  // number of simoutanous speakers
   cp5.addSlider("numSpeakers")
      .setPosition(420,60)
      .setSize(200,15)
@@ -81,6 +88,19 @@ void setup() {
      .setValue(numActiveVoices)
      .setBroadcast(true)
      ;
+
+  // individual interval for each voice
+  for (int i = 0; i < maxNumVoices; i++) {
+    cp5.addSlider("Voice_" + i)
+     .setPosition(420,105 + 35 * i)
+     .setSize(200,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))
+     .setRange(0, 10000)
+     .setValue(initialInterval)
+     .setBroadcast(true)
+     ;
+  }
   
   // noiseSeed(1);
   stroke(255);
@@ -108,7 +128,6 @@ void loadJSON() {
     JSONObject item = speakers.getJSONObject(i); 
     String name = item.getString("speaker");
     long id = item.getLong("id");
-    // println(name, id);
     NoiseCircluarWalker n = new NoiseCircluarWalker(id, name, i);
     walkers.add(n);
   }
@@ -143,6 +162,12 @@ void controlEvent(ControlEvent theControlEvent) {
   
   if(theControlEvent.isFrom("rangeController")) {
     minRadius = int(theControlEvent.getController().getArrayValue(0));
+  }
+  
+  for (int i = 0; i < maxNumVoices; i++) {
+    if(theControlEvent.isFrom("Voice_" + i)) {
+       orchestration.setVoiceInterval(i, int(theControlEvent.getController().getValue()));
+    }
   }
 }
 

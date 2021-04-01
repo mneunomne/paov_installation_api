@@ -7,7 +7,7 @@ public class Orchestration {
     
     // initiate all voices
     for (int i = 0; i < maxNumVoices; i++) {
-     voices[i] = new Voice(i, i < numActiveVoices,0); 
+     voices[i] = new Voice(i, i < numActiveVoices, initialInterval); 
     }
   }
   
@@ -66,5 +66,9 @@ public class Orchestration {
        ids[i] = voices[i].getSpeakerId();
     }
     return ids;
+  }
+  
+  void setVoiceInterval (int index, int value) {
+    voices[index].setInterval(value);
   }
 }
