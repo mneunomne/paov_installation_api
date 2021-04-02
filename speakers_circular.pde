@@ -16,7 +16,7 @@ Range range;
 
 float realRadius = 3;
 
-int maxNumVoices = 5;
+int maxNumVoices = 8;
 int numActiveVoices = 1;
 
 float aoff = 0.0;
@@ -41,25 +41,30 @@ int cp5_h = 20;
 ArrayList<String> availableVoices = new ArrayList<String>();
 
 void setup() {
-  size(800, 400);
-  minRadius = 100;
-  maxRadius = height/2;
+  size(800, 500);
+  minRadius = 0;
+  maxRadius = 257;
+  
+  PFont font = createFont("Courier New",12,true);
+  textFont(font);
+  
   cp5 = new ControlP5(this);
+
   int cp5_y = 0;
   // radius range
-  cp5.addRange("rangeController")
+  cp5.addRange("range_controller")
      .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setHandleSize(10)
      .setRange(0,height)
-     .setRangeValues(minRadius, maxRadius)
      .setBroadcast(true)
+     .setRangeValues(0, 257)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
      ;
   cp5_y+=25;
   // angle velocity slider
-  cp5.addSlider("angleVelocitySlider")
+  cp5.addSlider("angle_velocity_slider")
      .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
@@ -70,7 +75,7 @@ void setup() {
      ;
   cp5_y+=25;
   // radius velocity slider
-  cp5.addSlider("radiusVelocitySlider")
+  cp5.addSlider("radius_velocity_slider")
      .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
@@ -81,19 +86,31 @@ void setup() {
      ;
   cp5_y+=25;
   // number of simoutanous speakers
-  cp5.addSlider("numSpeakers")
+  maxNumVoices = 8;
+  cp5.addSlider("num_speakers")
      .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))  
-     .setNumberOfTickMarks(maxNumVoices)
-     .setRange(0, maxNumVoices)
+     .setNumberOfTickMarks(8)
+     .setRange(0, 8)
      .setValue(numActiveVoices)
      .setBroadcast(true)
      ;
   cp5_y+=25;
   // reverb amount
-  cp5.addSlider("reverbAmount")
+  cp5.addSlider("room_reverb")
+     .setPosition(420,cp5_h + cp5_y)
+     .setSize(200,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     .setRange(0, 1)
+     .setValue(0.5)
+     .setBroadcast(true)
+     ;
+
+  cp5_y+=25;
+  cp5.addSlider("voices_reverb")
      .setPosition(420,cp5_h + cp5_y)
      .setSize(200,15)
      .setColorForeground(color(255,40))
@@ -105,7 +122,7 @@ void setup() {
   
   // individual interval for each voice
   for (int i = 0; i < maxNumVoices; i++) {
-    cp5.addSlider("Voice_" + i)
+    cp5.addSlider("voice_" + i)
      .setPosition(420,(voicesControlHeight + 5) + 35 * i)
      .setSize(200,15)
      .setColorForeground(color(255,40))
@@ -115,6 +132,20 @@ void setup() {
      .setBroadcast(true)
      ;
   }
+  /*
+  for (int i = 0; i < maxNumVoices; i++) {
+    cp5.addSlider("reverb_" + i)
+     .setPosition(420,(voicesControlHeight + 5) + 35 * i)
+     .setSize(200,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))
+     .setRange(0, 10000)
+     .setValue(initialInterval)
+     .setBroadcast(true)
+     ;
+  }*/
+  
+  // cp5.loadProperties();
   
   // noiseSeed(1);
   stroke(255);
@@ -153,6 +184,14 @@ void draw() {
   stroke(255);
   ellipse(height/2, height/2, height/2,height/2);
   
+  stroke(255, 0, 0);
+  ellipse(height/2, height/2, minRadius,minRadius);
+  
+  stroke(255, 0, 0);
+  ellipse(height/2, height/2, maxRadius,maxRadius);
+  
+  stroke(255);
+  
   // orchestration update
   orchestration.update();
   
@@ -165,45 +204,58 @@ void draw() {
 
 
 void controlEvent(ControlEvent theControlEvent) {
-  if(theControlEvent.isFrom("rangeController")) {
+  if(theControlEvent.isFrom("range_controller")) {
     minRadius = int(theControlEvent.getController().getArrayValue(0));
     maxRadius = int(theControlEvent.getController().getArrayValue(1));
   }
   
-  if(theControlEvent.isFrom("rangeController")) {
+  if(theControlEvent.isFrom("range_cController")) {
     minRadius = int(theControlEvent.getController().getArrayValue(0));
   }
   
-  if(theControlEvent.isFrom("rangeController")) {
+  if(theControlEvent.isFrom("range_controller")) {
     minRadius = int(theControlEvent.getController().getArrayValue(0));
   }
   
   for (int i = 0; i < maxNumVoices; i++) {
-    if(theControlEvent.isFrom("Voice_" + i)) {
+    if(theControlEvent.isFrom("voice_" + i)) {
        orchestration.setVoiceInterval(i, int(theControlEvent.getController().getValue()));
     }
   }
 }
 
 
-void angleVelocitySlider(float vel) {
+void angle_velocity_slider(float vel) {
   for(int i = 0; i < walkers.size(); i++) {
     walkers.get(i).setAngleVelocity(vel);
   }
 }
 
-void radiusVelocitySlider(float vel) {
+void radius_velocity_slider(float vel) {
   for(int i = 0; i < walkers.size(); i++) {
     walkers.get(i).setRadiusVelocity(vel);
   }
 }
 
-void numSpeakers (int val) {
+void num_speakers (int val) {
   orchestration.setActiveVoices(val);
 }
 
-void reverbAmount (float val) {
-  OscMessage audioMessage = new OscMessage("/reverb");
+void room_reverb (float val) {
+  OscMessage audioMessage = new OscMessage("/room_reverb");
   audioMessage.add(val);
   oscP5.send(audioMessage, remoteBroadcast);
+}
+
+
+void voices_reverb (float val) {
+  OscMessage audioMessage = new OscMessage("/voices_reverb");
+  audioMessage.add(val);
+  oscP5.send(audioMessage, remoteBroadcast);
+}
+
+void keyPressed () {
+ if (key == 's' || key == 'S') {
+   cp5.saveProperties();
+ }
 }

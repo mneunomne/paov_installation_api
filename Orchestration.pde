@@ -13,6 +13,13 @@ public class Orchestration {
   
   void setActiveVoices (int amount) {
     numActiveVoices = amount;
+    for(int i = 0; i < maxNumVoices; i++) {
+      if (i < numActiveVoices) {
+        voices[i].setActive(true); 
+      } else {
+        voices[i].setActive(false);
+      }
+    }
   }
   
   void update () {
@@ -40,16 +47,27 @@ public class Orchestration {
     return filtered.get(index);
   }
   
-  void sendOscplay (long speakerId, int audioID, String audioText) {
+  void sendOscplay (long speakerId, int audioID, String audioText, int index) {
+    // VISUAL
     OscMessage visMessage = new OscMessage("/play");
     visMessage.add(Long.toString(speakerId));
     visMessage.add(audioID);
     visMessage.add(audioText);
     oscP5.send(visMessage, localBroadcast);
     
+    // set the index of MaxMSP "voice player" a way to save memory in MaxMSP
+    for (NoiseCircluarWalker walker : walkers) {
+      long _id = walker.getSpeakerId();
+      if (_id == speakerId) {
+         walker.setVoiceIndex(index);
+      }
+    }
+        
+    // AUDIO
     OscMessage audioMessage = new OscMessage("/play");
     audioMessage.add(Long.toString(speakerId));
     audioMessage.add(audioID);
+    audioMessage.add(index);
     oscP5.send(audioMessage, remoteBroadcast);
   }
   

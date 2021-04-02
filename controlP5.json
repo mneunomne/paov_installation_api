@@ -7,7 +7,7 @@
   "/radius_velocity_slider": {
     "min": 1,
     "max": 500,
-    "value": 10
+    "value": 38.42499923706055
   },
   "/voice_3": {
     "min": 0,
@@ -20,8 +20,8 @@
     "value": 3000
   },
   "/range_controller": {
-    "lowValue": 62.222225189208984,
-    "highValue": 166.66665649414062
+    "lowValue": 24.44444465637207,
+    "highValue": 206.66665649414062
   },
   "/voice_1": {
     "min": 0,
@@ -31,7 +31,7 @@
   "/angle_velocity_slider": {
     "min": 1,
     "max": 500,
-    "value": 10
+    "value": 15.969999313354492
   },
   "/num_speakers": {
     "min": 0,
@@ -41,7 +41,7 @@
   "/voices_reverb": {
     "min": 0,
     "max": 1,
-    "value": 0.5
+    "value": 0.5349999666213989
   },
   "/voice_4": {
     "min": 0,
@@ -51,6 +51,6 @@
   "/room_reverb": {
     "min": 0,
     "max": 1,
-    "value": 0.5
+    "value": 0.5149999856948853
   }
 }

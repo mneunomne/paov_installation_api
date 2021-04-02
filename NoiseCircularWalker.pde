@@ -8,6 +8,7 @@ class NoiseCircluarWalker {
   float posX, posY;
   String name; 
   int index; 
+  int voiceIndex; 
   NoiseCircluarWalker (long _id, String _name, int _index) {
     aoff = random(10000);
     roff = random(10000);
@@ -29,13 +30,16 @@ class NoiseCircluarWalker {
     for (long _id : orchestration.getCurrentSpeakerId()) {
       if (_id == id) {
         fill(255); 
+        sendAudioOSC(theta, radius);
       }
     }
+    
+    sendVisualOSC(theta, radius);
     
     translate(height/2, height/2);
     ellipse(posX, posY, 4, 4);
     popMatrix();
-    sendOSC(theta, radius);
+    
   }
   
   void setAngleVelocity (float vel) {
@@ -46,19 +50,28 @@ class NoiseCircluarWalker {
     rVel = vel / 10000;
   }
   
-  void sendOSC (float theta, float radius) {
+  void setVoiceIndex (int _voiceIndex) { //<>//
+    voiceIndex = _voiceIndex;
+  }
+  
+  void sendVisualOSC (float theta, float radius) {
     OscMessage visMessage = new OscMessage("/pos");
     visMessage.add(index);
     visMessage.add(theta);
     // visMessage.add(0.001);
     visMessage.add(radius / height);
     oscP5.send(visMessage, localBroadcast);
-    
-    
+  }
+  
+  void sendAudioOSC (float theta, float radius) {
     OscMessage audioMessage = new OscMessage("/pos");
-    audioMessage.add(Long.toString(id));
+    audioMessage.add(voiceIndex);
     audioMessage.add((theta / (PI * 2) * 360 - 90) % 360 );
     audioMessage.add(radius / (height/2));
     oscP5.send(audioMessage, remoteBroadcast);
+  }
+  
+  long getSpeakerId() {
+    return id;
   }
 }
