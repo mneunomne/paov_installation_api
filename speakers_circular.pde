@@ -222,6 +222,10 @@ void controlEvent(ControlEvent theControlEvent) {
     if(theControlEvent.isFrom("interval_" + i)) {
        orchestration.setVoiceInterval(i, int(theControlEvent.getController().getValue()));
     }
+    
+    if(theControlEvent.isFrom("reverb_" + i)) {
+       orchestration.setVoiceReverb(i, int(theControlEvent.getController().getValue()));
+    }
   }
 }
 

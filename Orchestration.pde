@@ -7,7 +7,9 @@ public class Orchestration {
     
     // initiate all voices
     for (int i = 0; i < maxNumVoices; i++) {
-     voices[i] = new Voice(i, i < numActiveVoices, initialInterval); 
+     // get reverb valuefrom cp5
+     float voiceReverb = cp5.getController("reverb_" + i).getValue();
+     voices[i] = new Voice(i, i < numActiveVoices, initialInterval, voiceReverb); 
     }
   }
   
@@ -47,7 +49,7 @@ public class Orchestration {
     return filtered.get(index);
   }
   
-  void sendOscplay (long speakerId, int audioID, String audioText, int index) {
+  void sendOscplay (long speakerId, int audioID, String audioText, int index, float reverb) {
     // VISUAL
     OscMessage visMessage = new OscMessage("/play");
     visMessage.add(Long.toString(speakerId));
@@ -70,6 +72,7 @@ public class Orchestration {
     audioMessage.add(Long.toString(speakerId));
     audioMessage.add(audioID);
     audioMessage.add(index);
+    audioMessage.add(reverb);
     oscP5.send(audioMessage, remoteBroadcast);
   }
   
@@ -90,5 +93,9 @@ public class Orchestration {
   
   void setVoiceInterval (int index, int value) {
     voices[index].setInterval(value);
+  }
+  
+  void setVoiceReverb (int index, float value) {
+    voices[index].setReverb(value);
   }
 }
