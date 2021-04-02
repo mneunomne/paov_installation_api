@@ -45,7 +45,11 @@ public class Voice {
   void setActive(boolean val) {
     isActive = val;
     if (val == false) {
-      reset();
+      if (isPlaying) {
+        end(); 
+      } else {
+       reset(); 
+      }
     }
   }
   
@@ -73,11 +77,11 @@ public class Voice {
   
   void debug () {
     if (isActive) {
-      text(index + ": " + currentSpeakerName + " "  + curAudioText, 420, voicesControlHeight + 35 * index); 
+      text(index + ": " + currentSpeakerName + " "  + curAudioText, 420, voicesControlHeight + voiceControlSpacing * index); 
     } else {
       pushStyle();
       fill(255,0, 0);
-      text(index + ": inactive", 420, voicesControlHeight + 35 * index);
+      text(index + ": inactive", 420, voicesControlHeight + voiceControlSpacing * index);
       popStyle();
     }
   }

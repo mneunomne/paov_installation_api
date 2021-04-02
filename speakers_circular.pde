@@ -35,13 +35,14 @@ Orchestration orchestration;
 
 float blurAmount = 65;
 
-int voicesControlHeight = 200;
+int voicesControlHeight = 180;
+int voiceControlSpacing = 45;
 int cp5_h = 20;
 
 ArrayList<String> availableVoices = new ArrayList<String>();
 
 void setup() {
-  size(800, 500);
+  size(800, 600);
   minRadius = 0;
   maxRadius = 257;
   
@@ -122,9 +123,9 @@ void setup() {
   
   // individual interval for each voice
   for (int i = 0; i < maxNumVoices; i++) {
-    cp5.addSlider("voice_" + i)
-     .setPosition(420,(voicesControlHeight + 5) + 35 * i)
-     .setSize(200,15)
+    cp5.addSlider("interval_" + i)
+     .setPosition(420,(voicesControlHeight + 5) + voiceControlSpacing * i)
+     .setSize(200,10)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
      .setRange(0, 10000)
@@ -132,18 +133,18 @@ void setup() {
      .setBroadcast(true)
      ;
   }
-  /*
+
   for (int i = 0; i < maxNumVoices; i++) {
     cp5.addSlider("reverb_" + i)
-     .setPosition(420,(voicesControlHeight + 5) + 35 * i)
-     .setSize(200,15)
+     .setPosition(420,(voicesControlHeight + 20) + voiceControlSpacing * i)
+     .setSize(200,10)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
-     .setRange(0, 10000)
-     .setValue(initialInterval)
+     .setRange(0, 1)
+     .setValue(0.5)
      .setBroadcast(true)
      ;
-  }*/
+  }
   
   // cp5.loadProperties();
   
@@ -218,7 +219,7 @@ void controlEvent(ControlEvent theControlEvent) {
   }
   
   for (int i = 0; i < maxNumVoices; i++) {
-    if(theControlEvent.isFrom("voice_" + i)) {
+    if(theControlEvent.isFrom("interval_" + i)) {
        orchestration.setVoiceInterval(i, int(theControlEvent.getController().getValue()));
     }
   }

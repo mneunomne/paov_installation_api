@@ -62,6 +62,8 @@ public class Orchestration {
          walker.setVoiceIndex(index);
       }
     }
+    
+    println("PLAY! " + audioText);
         
     // AUDIO
     OscMessage audioMessage = new OscMessage("/play");
