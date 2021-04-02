@@ -65,7 +65,7 @@ public class Orchestration {
       }
     }
     
-    println("PLAY! " + audioText);
+    println("PLAY!", audioText, reverb);
         
     // AUDIO
     OscMessage audioMessage = new OscMessage("/play");

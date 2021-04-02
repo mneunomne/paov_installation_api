@@ -1,5 +1,6 @@
 import netP5.*;
 import oscP5.*;
+import AULib.*;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -12,6 +13,7 @@ NetAddress localBroadcast;
 
 import controlP5.*;
 ControlP5 cp5;
+ControlP5 cp5_copy;
 Range range;
 
 float realRadius = 3;
@@ -41,14 +43,17 @@ int cp5_h = 20;
 
 ArrayList<String> availableVoices = new ArrayList<String>();
 
+SceneController sceneController = new SceneController();
+
 void setup() {
-  size(800, 600);
+  size(900, 600);
   minRadius = 0;
   maxRadius = 257;
   
   PFont font = createFont("Courier New",12,true);
   textFont(font);
   
+  cp5_copy = new ControlP5(this);
   cp5 = new ControlP5(this);
 
   int cp5_y = 0;
@@ -146,7 +151,20 @@ void setup() {
      ;
   }
   
+  for (int i = 0; i < 3; i++) {
+    cp5.addBang("scene_" + i)
+     .setPosition(width - 80, cp5_h + i * 50)
+     .setSize(50,30)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))
+     .setBroadcast(true)
+     .setLabel("Scene " + i)
+     ;
+  }
+  // cp5_copy.getProperties().copy();
+  // cp5_copy = cp5;
   // cp5.loadProperties();
+  
   
   // noiseSeed(1);
   stroke(255);
@@ -196,6 +214,8 @@ void draw() {
   // orchestration update
   orchestration.update();
   
+  sceneController.update();
+  
   for(int i = 0; i < numSpeakers; i++) {
     walkers.get(i).update();
   }
@@ -224,7 +244,13 @@ void controlEvent(ControlEvent theControlEvent) {
     }
     
     if(theControlEvent.isFrom("reverb_" + i)) {
-       orchestration.setVoiceReverb(i, int(theControlEvent.getController().getValue()));
+       orchestration.setVoiceReverb(i, theControlEvent.getController().getValue());
+    }
+  }
+  
+  for (int i=0;i<3;i++) {
+    if (theControlEvent.isFrom("scene_" + i)) {
+      sceneController.loadScene(i + 1);
     }
   }
 }
@@ -262,5 +288,28 @@ void voices_reverb (float val) {
 void keyPressed () {
  if (key == 's' || key == 'S') {
    cp5.saveProperties();
+ }
+ if (key == 'l' || key == 'L') {
+   cp5.loadProperties();
+ }
+ 
+ if (key == '1') {
+   cp5.saveProperties("scene-1.json");
+ }
+ if (key == '2') {
+   cp5.saveProperties("scene-2.json");
+ }
+ if (key == '3') {
+   cp5.saveProperties("scene-3.json");
+ }
+ // load
+ if (key == '!') {
+   sceneController.loadScene(1);
+ }
+ if (key == '@') {
+   sceneController.loadScene(2);
+ }
+ if (key == '#') {
+   sceneController.loadScene(3);
  }
 }
