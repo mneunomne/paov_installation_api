@@ -16,6 +16,8 @@ ControlP5 cp5;
 ControlP5 cp5_copy;
 Range range;
 
+JSONArray speakers;
+
 float realRadius = 3;
 
 int maxNumVoices = 8;
@@ -35,7 +37,7 @@ float maxRadius;
 
 Orchestration orchestration;
 
-float blurAmount = 65;
+float blurAmount = 68;
 
 int voicesControlHeight = 180;
 int voiceControlSpacing = 45;
@@ -153,7 +155,7 @@ void setup() {
   
   for (int i = 0; i < 3; i++) {
     cp5.addBang("scene_" + i)
-     .setPosition(width - 80, cp5_h + i * 50)
+     .setPosition(width - 80, cp5_h + 20 + i * 50)
      .setSize(50,30)
      .setColorForeground(color(255,40))
      .setColorBackground(color(255,40))
@@ -161,6 +163,29 @@ void setup() {
      .setLabel("Scene " + i)
      ;
   }
+  
+  for (int i = 0; i < 3; i++) {
+    cp5.addBang("scene_save_" + i)
+     .setPosition(width - 160, cp5_h + 20 + i * 50)
+     .setSize(50,30)
+     .setColorForeground(color(0, 255, 0, 40))
+     .setColorBackground(color(0,255, 0, 40))
+     .setBroadcast(true)
+     .setLabel("Save " + i)
+     ;
+  }
+  
+  cp5.addSlider("scene_transition_time")
+     .setPosition(width - 160, 220)
+     .setSize(140,15)
+     .setColorForeground(color(255,40))
+     .setColorBackground(color(255,40))  
+     .setRange(1, 3*60)
+     .setValue(5)
+     .setBroadcast(true)
+     ;
+  cp5.getController("scene_transition_time").getCaptionLabel().align(ControlP5.LEFT, ControlP5.TOP_OUTSIDE);
+
   // cp5_copy.getProperties().copy();
   // cp5_copy = cp5;
   // cp5.loadProperties();
@@ -187,7 +212,7 @@ void loadJSON() {
   json = loadJSONObject("data.json");
   JSONArray audios = json.getJSONArray("audios");
   orchestration = new Orchestration(audios);
-  JSONArray speakers = json.getJSONArray("speakers");
+  speakers = json.getJSONArray("speakers");
   for (int i = 0; i < speakers.size(); i++) {    
     JSONObject item = speakers.getJSONObject(i); 
     String name = item.getString("speaker");
@@ -252,6 +277,10 @@ void controlEvent(ControlEvent theControlEvent) {
     if (theControlEvent.isFrom("scene_" + i)) {
       sceneController.loadScene(i + 1);
     }
+    
+    if (theControlEvent.isFrom("scene_save_" + i)) {
+      cp5.saveProperties("scene-" + (i + 1) + ".json");
+    }
   }
 }
 
@@ -285,6 +314,10 @@ void voices_reverb (float val) {
   oscP5.send(audioMessage, remoteBroadcast);
 }
 
+void scene_transition_time (float val) {
+  sceneController.setTransitionTime(int(val * 1000)); 
+}
+
 void keyPressed () {
  if (key == 's' || key == 'S') {
    cp5.saveProperties();
@@ -292,24 +325,14 @@ void keyPressed () {
  if (key == 'l' || key == 'L') {
    cp5.loadProperties();
  }
- 
- if (key == '1') {
+ // save
+ if (key == '!') {
    cp5.saveProperties("scene-1.json");
  }
- if (key == '2') {
+ if (key == '@') {
    cp5.saveProperties("scene-2.json");
  }
- if (key == '3') {
-   cp5.saveProperties("scene-3.json");
- }
- // load
- if (key == '!') {
-   sceneController.loadScene(1);
- }
- if (key == '@') {
-   sceneController.loadScene(2);
- }
  if (key == '#') {
-   sceneController.loadScene(3);
+   cp5.saveProperties("scene-3.json");
  }
 }

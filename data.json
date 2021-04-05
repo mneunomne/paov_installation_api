@@ -2349,103 +2349,128 @@
     "speakers": [
         {
             "speaker": "Alberto Harres",
-            "id": 5631317686
+            "id": 5631317686,
+            "category": "plain"
         },
         {
             "speaker": "nilya musaeva",
-            "id": 4472772915
+            "id": 4472772915,
+            "category": "plain"
         },
         {
             "speaker": "S. C.",
-            "id": 4408865338
+            "id": 4408865338,
+            "category": "melodic"
         },
         {
             "speaker": "ruoxi",
-            "id": 5136095171
+            "id": 5136095171,
+            "category": "loud"
         },
         {
             "speaker": "Kazuki",
-            "id": 5314577364
+            "id": 5314577364,
+            "category": "rhythm"
         },
         {
             "speaker": "Hem Poudyal",
-            "id": 5411097981
+            "id": 5411097981,
+            "category": "plain"
         },
         {
             "speaker": "Antônio Hof",
-            "id": 5629926613
+            "id": 5629926613,
+            "category": "plain"
         },
         {
             "speaker": "Chi Him Chik",
-            "id": 5576183485
+            "id": 5576183485,
+            "category": "loud"
         },
         {
             "speaker": "Sangbong Lee",
-            "id": 5524258652
+            "id": 5524258652,
+            "category": "soft"
         },
         {
             "speaker": "Josh",
-            "id": 4953417715
+            "id": 4953417715,
+            "category": "loud"
         },
         {
             "speaker": "Bojana",
-            "id": 4612847105
+            "id": 4612847105,
+            "category": "soft"
         },
         {
             "speaker": "Victor Artiga",
-            "id": 4963464597
+            "id": 4963464597,
+            "category": "melodic"
         },
         {
             "speaker": "Debaditya Bhowmik",
-            "id": 5715773637
+            "id": 5715773637,
+            "category": "loud"
         },
         {
             "speaker": "Julia",
-            "id": 5319950334
+            "id": 5319950334,
+            "category": "melodic"
         },
         {
             "speaker": "Ayse Seyhan",
-            "id": 5465850985
+            "id": 5465850985,
+            "category": "melodic"
         },
         {
             "speaker": "Anna",
-            "id": 4570123136
+            "id": 4570123136,
+            "category": "loud"
         },
         {
             "speaker": "Abdulghaffar",
-            "id": 4746759530
+            "id": 4746759530,
+            "category": "soft"
         },
         {
             "speaker": "Pelin",
-            "id": 5227186112
+            "id": 5227186112,
+            "category": "melodic"
         },
         {
             "speaker": "Bruno HfK",
-            "id": 5203538418
+            "id": 5203538418,
+            "category": "plain"
         },
         {
             "speaker": "Ivett K.",
-            "id": 5170943596
+            "id": 5170943596,
+            "category": "rhythm"
         },
         {
             "speaker": "Slava Romanov",
-            "id": 4487042723
+            "id": 4487042723,
+            "category": "loud"
         },
         {
             "speaker": "Marcela DM",
-            "id": 5172654043
+            "id": 5172654043,
+            "category": "melodic"
         },
         {
             "speaker": "Lucca",
-            "id": 5155406234
+            "id": 5155406234,
+            "category": "plain"
         },
         {
             "speaker": "Bonasladybug",
-            "id": 4357336763
+            "id": 4357336763,
+            "category": "melodic"
         },
         {
             "speaker": "Soumya HfK",
-            "id": 5572716069
+            "id": 5572716069,
+            "category": "soft"
         }
     ]
 }

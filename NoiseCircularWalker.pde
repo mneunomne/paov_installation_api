@@ -22,7 +22,7 @@ class NoiseCircluarWalker {
     aoff = aoff + aVel;
     roff = roff + rVel;
     float theta = noise(aoff) * 4 * PI;
-    float radius = map(noise(roff), 0, 1, minRadius, maxRadius);
+    float radius = min(map(noise(roff), 0, 0.8, minRadius, maxRadius), maxRadius);
     posX = radius * cos( theta );
     posY = radius * sin( theta );
     pushMatrix();
@@ -67,7 +67,8 @@ class NoiseCircluarWalker {
     OscMessage audioMessage = new OscMessage("/pos");
     audioMessage.add(voiceIndex);
     audioMessage.add((theta / (PI * 2) * 360 - 90) % 360 );
-    audioMessage.add(radius / (height/2));
+    float audioRadius = map(radius / (height/2), 0.2, 1, 0, 1);
+    audioMessage.add(audioRadius);
     oscP5.send(audioMessage, remoteBroadcast);
   }
   

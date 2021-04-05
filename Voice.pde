@@ -67,7 +67,7 @@ public class Voice {
       if (!isPlaying) {
         if (millis() > lastTimeCheck + interval ) {
           // here pick on audio 
-          JSONObject audio = orchestration.getNextAudio();
+          JSONObject audio = orchestration.getNextAudio(index);
           play(audio);
         }
       } else {

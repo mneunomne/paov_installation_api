@@ -1,10 +1,14 @@
 public class Orchestration { 
+  
+  // "soft", "melodic", "rhythm", "loud", "plain"
+  
+  String categories[] = {"soft", "melodic", "rhythm", "", "plain"};
+  
   JSONArray audios;
   Voice[] voices = new Voice[maxNumVoices];
   
   Orchestration (JSONArray _audios) {
     audios = _audios;
-    
     // initiate all voices
     for (int i = 0; i < maxNumVoices; i++) {
      // get reverb valuefrom cp5
@@ -30,18 +34,34 @@ public class Orchestration {
     }
   }
 
-  JSONObject getNextAudio () {
+  JSONObject getNextAudio (int voiceIndex) {
     ArrayList<JSONObject> filtered = new ArrayList<JSONObject>();
     for (int i = 0; i < audios.size(); i++) {
       JSONObject obj = audios.getJSONObject(i);
       long cur_id = obj.getLong("from_id");
       boolean hasFound = false; 
+      boolean hasCategory = false; 
+      
+      /*
+      for (int j = 0; j < speakers.size(); j++) {
+        JSONObject item = speakers.getJSONObject(j); 
+        String category = item.getString("category");
+        String name = item.getString("speaker");
+        long _id = item.getLong("id");
+        if (_id != cur_id) continue;
+        if (category.contains(categories[floor(voiceIndex/2)])) {
+          println("added", category, categories[floor(voiceIndex/2)], name);
+          hasCategory = true;
+        }
+      }
+      */
+      hasCategory = true;
       for (long id : getCurrentSpeakerId()) {
          if (cur_id == id) {
             hasFound = true;
          }
       }
-      if (!hasFound) {
+      if (!hasFound && hasCategory) {
          filtered.add(obj);
       }
     }

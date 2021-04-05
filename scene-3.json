@@ -2,7 +2,7 @@
   "/angle_velocity_slider": {
     "min": 1,
     "max": 500,
-    "value": 15.969999313354492
+    "value": 58.3849983215332
   },
   "/num_speakers": {
     "min": 0,
@@ -12,100 +12,105 @@
   "/radius_velocity_slider": {
     "min": 1,
     "max": 500,
-    "value": 78.34500122070312
+    "value": 60
   },
   "/interval_1": {
     "min": 0,
     "max": 10000,
-    "value": 1850
+    "value": 4300
   },
   "/interval_2": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 2100
+  },
+  "/scene_transition_time": {
+    "min": 1,
+    "max": 180,
+    "value": 5
   },
   "/range_controller": {
-    "lowValue": 176.6666717529297,
-    "highValue": 300
+    "lowValue": 96.66667175292969,
+    "highValue": 320.0000305175781
   },
   "/interval_0": {
     "min": 0,
     "max": 10000,
-    "value": 5100
+    "value": 6599
   },
   "/reverb_6": {
     "min": 0,
     "max": 1,
-    "value": 0.03999999910593033
+    "value": 0.6549999713897705
   },
   "/reverb_7": {
     "min": 0,
     "max": 1,
-    "value": 0.019999999552965164
+    "value": 0.7649999856948853
   },
   "/reverb_2": {
     "min": 0,
     "max": 1,
-    "value": 0.5
+    "value": 1
   },
   "/reverb_3": {
     "min": 0,
     "max": 1,
-    "value": 0.2750000059604645
+    "value": 0.9099999666213989
   },
   "/reverb_4": {
     "min": 0,
     "max": 1,
-    "value": 0.0949999988079071
+    "value": 0.8050000071525574
   },
   "/interval_7": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 2200
   },
   "/reverb_5": {
     "min": 0,
     "max": 1,
-    "value": 0.07499999552965164
+    "value": 0.6800000071525574
   },
   "/voices_reverb": {
     "min": 0,
     "max": 1,
-    "value": 0.5
+    "value": 0
   },
   "/interval_5": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 1450
   },
   "/interval_6": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 1600
   },
   "/interval_3": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 2350
   },
   "/reverb_0": {
     "min": 0,
     "max": 1,
-    "value": 0.8999999761581421
+    "value": 1
   },
   "/reverb_1": {
     "min": 0,
     "max": 1,
-    "value": 0.29999998211860657
+    "value": 1
   },
   "/interval_4": {
     "min": 0,
     "max": 10000,
-    "value": 3000
+    "value": 2100
   },
   "/room_reverb": {
     "min": 0,
     "max": 1,
-    "value": 0.8449999690055847
+    "value": 0.019999999552965164
   }
 }
